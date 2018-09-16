@@ -1,0 +1,14 @@
+version: '3'
+services:
+  scrapyd:
+    build: ./scrapyd
+    volumes:
+      - ./scrapyd:/scrapyd
+  spiderkeeper:
+    build: ./spiderkeeper
+    ports:
+      - 5000:5000
+    volumes:
+      - ./spiderkeeper:/spiderkeeper
+    environment:
+      - SPIDERKEEPER_PASSWORD=${SPIDERKEEPER_PASSWORD}
