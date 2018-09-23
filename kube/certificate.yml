@@ -1,0 +1,19 @@
+apiVersion: certmanager.k8s.io/v1alpha1
+kind: Certificate
+metadata:
+  name: spider-skleiner-com
+  namespace: spider
+spec:
+  secretName: spider-skleiner-com-tls
+  issuerRef:
+    name: letsencrypt-cluster
+    kind: ClusterIssuer
+  commonName: spider.skleiner.com
+  dnsNames:
+    - spider.skleiner.com
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains: 
+        - spider.skleiner.com

@@ -1,0 +1,12 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: spider
+  namespace: spider
+spec:
+  selector:
+    app: spider
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000

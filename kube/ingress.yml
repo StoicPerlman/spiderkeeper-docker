@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  generation: 1
+  name: spiderkeeper
+  namespace: spider
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    kubernetes.io/tls-acme: 'true'
+spec:
+  rules:
+  - host: spider.skleiner.com
+    http:
+      paths:
+      - backend:
+          serviceName: spider
+          servicePort: 5000
+        path: /
+  tls:
+  - secretName: spider-skleiner-com-tls
+    hosts:
+    - spider.skleiner.com

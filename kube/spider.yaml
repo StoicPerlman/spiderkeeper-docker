@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spider
+  namespace: spider
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spider
+  template:
+    metadata:
+      labels:
+        app: spider
+    spec:
+      containers:
+      - name: spiderkeeper
+        image: stoicperlman/spiderkeeper
+        ports:
+        - containerPort: 5000
+        env:
+        - name: SPIDERKEEPER_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: spiderkeeper-password
+              key: password
+      - name: scrapyd
+        image: stoicperlman/scrapyd
+        ports:
+        - containerPort: 6800
+        livenessProbe:
+          httpGet:
+            path: /daemonstatus.json
+            port: 6800
+          initialDelaySeconds: 5
+          periodSeconds: 5
