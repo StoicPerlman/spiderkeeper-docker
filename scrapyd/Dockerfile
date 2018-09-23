@@ -1,21 +1,23 @@
 FROM python:3-alpine
 
-RUN apk update && apk add build-base libxml2-dev libxslt-dev libffi-dev openssl-dev
+ENV RUNTIME_PACKAGES openssl-dev libxslt-dev
+ENV BUILD_PACKAGES build-base libxml2-dev libffi-dev
 
-RUN mkdir /scrapyd
-WORKDIR /scrapyd
-
-RUN pip install scrapyd
-
-# looks like scrapyd-deploy can't handle dependancies manually adding until this is fixed
+# looks like scrapyd-deploy can't handle dependancies us and dateparser manually adding until this is fixed
 # https://stackoverflow.com/questions/46389882/scrapy-deploy-to-scrapyd-doesnt-install-requirements-pointed-in-setup-py
-RUN pip install us dateparser
+ENV MY_PACKAGES us dateparser
 
-RUN apk del build-base
+RUN apk update && \
+        apk add --no-cache $BUILD_PACKAGES $RUNTIME_PACKAGES && \
+        mkdir -p /scrapyd/data && \
+        pip --no-cache-dir install scrapyd $MY_PACKAGES && \
+        apk del $BUILD_PACKAGES
+
+WORKDIR /scrapyd
 
 ENV TZ=UTC
 
 COPY scrapyd.conf /etc/scrapyd/scrapyd.conf
 
 EXPOSE 6800
-CMD ["scrapyd"]
+CMD ["scrapyd", "--pidfile="]

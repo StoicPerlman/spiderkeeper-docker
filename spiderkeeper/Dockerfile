@@ -1,13 +1,14 @@
 FROM python:3-alpine
 
-RUN apk update && apk add build-base
+ENV BUILD_PACKAGES build-base
 
-RUN mkdir /spiderkeeper
+RUN apk update && \
+        apk add --no-cache $BUILD_PACKAGES && \
+        mkdir /spiderkeeper && \
+        pip install spiderkeeper && \
+        apk del $BUILD_PACKAGES
+
 WORKDIR /spiderkeeper
-
-RUN pip install spiderkeeper
-
-RUN apk del build-base
 
 ENV TZ=UTC
 ENV SCRAPY_SERVER=http://scrapyd:6800

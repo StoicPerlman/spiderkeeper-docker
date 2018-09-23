@@ -2,15 +2,23 @@ version: '3'
 services:
   scrapyd:
     build: ./scrapyd
+    image: stoicperlman/scrapyd
     restart: always
     volumes:
-      - ./scrapyd:/scrapyd
+      - scrapyd:/scrapyd/data
+    ports:
+      - 6800:6800
   spiderkeeper:
     build: ./spiderkeeper
+    image: stoicperlman/spiderkeeper
     restart: always
     ports:
       - 5000:5000
     volumes:
-      - ./spiderkeeper:/spiderkeeper
+      - spiderkeeper:/spiderkeeper
     environment:
       - SPIDERKEEPER_PASSWORD=${SPIDERKEEPER_PASSWORD}
+
+volumes:
+  scrapyd:
+  spiderkeeper:
